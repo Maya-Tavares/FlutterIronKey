@@ -3,7 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ironkey/app_theme.dart';
-
+import 'package:ironkey/password_generator.dart';
+import 'package:ironkey/pin_password_generator.dart';
+import 'package:ironkey/standard_password_generator.dart';
+// run terminal: flutter pub get 
 void main (){
   runApp(IronKeyApp());
 }
@@ -31,9 +34,15 @@ class IronKeyScreen extends StatefulWidget {
   State<IronKeyScreen> createState() => _IronKeyScreenState();
 }
 
+  enum PasswordType { pin, standard }
+
 class _IronKeyScreenState extends State<IronKeyScreen> {
 
   final TextEditingController _passwordController = TextEditingController();
+
+  PasswordType passwordSelectedType = PasswordType.pin;
+  int maxCharacters = 12;
+  bool isEditable = false;
 
   @override
   void initState() {
@@ -59,18 +68,29 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
   }
 
     void generatePassword() {
-    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const lower = "abcdefghijklmnopqrstuvwxyz";
-    const numbers = "0123456789";
-    const symbols = "!@#\$%&*";
-    final chars = upper + lower + numbers + symbols;
-    final random = Random();
-    setState(() {
-    _passwordController.text = List.generate(
-      12,
-    (_) => chars[random.nextInt(chars.length)],
-    ).join();
-    });
+      final PasswordGenerator generator = passwordSelectedType ==
+      PasswordType.pin
+      ? PinPasswordGenerator()
+      : StandardPasswordGenerator();
+      final result = generator.generate(maxCharacters);
+      setState(() {
+      _passwordController.text = result;
+ });
+
+    // const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    // const lower = "abcdefghijklmnopqrstuvwxyz";
+    // const numbers = "0123456789";
+    // const symbols = "!@#\$%&*";
+    // final chars = upper + lower + numbers + symbols;
+    // final random = Random();
+
+    // setState(() {
+    // _passwordController.text = List.generate(
+    //   12,
+    // (_) => chars[random.nextInt(chars.length)],
+    // ).join();
+    // });
+
     }
 
   @override
@@ -87,8 +107,10 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
                   height: 150,
                   child: Image.asset("assets/images/ironman.jpg")),
               ),
+
               //////////
               ////////////// Titulo
+              
               SizedBox(height: 16),
               Text(
                 "Sua senha segura",
@@ -100,11 +122,14 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
                   fontSize: 24
                   ),
               ),
+
               //////////
               /////////////Senha
+              
                 SizedBox(height: 16),
                 TextField(
-                  maxLength: 12,
+                  enabled: isEditable,
+                  maxLength: maxCharacters,
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: "Password",
@@ -121,6 +146,60 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
                 Text(_passwordController.text)
             ])
             ),
+
+            //////////
+              /////////////Tipo de senha
+              ///
+            Align(alignment: Alignment.centerLeft, child: Text('Tipo de senha'),),
+                Row(children: [Expanded(
+                  child: RadioListTile<PasswordType>(
+                  value: PasswordType.pin,
+                  groupValue: passwordSelectedType,
+                  title: const Text('PIN'),
+                  onChanged: (value) {
+                    setState(() {
+                passwordSelectedType = value!;
+                });
+              },
+            ),),
+                Expanded(
+                  child: RadioListTile<PasswordType>(
+                  value: PasswordType.standard,
+                  groupValue: passwordSelectedType,
+                  title: const Text('Senha padrão'),
+                  onChanged: (value) {
+                    setState(() {
+                  passwordSelectedType = value!;
+                });
+              },
+            ),
+          ),
+                ],
+                ),
+
+                //////////
+              /////////////PERMISSAO EDITAR SENHA
+                Divider(color: ColorScheme.outline),
+
+                Row(
+                  children: [
+                    Icon(isEditable ? Icons.lock_open : Icons.lock),
+                    Text("Permite editar a senha? "),
+                    Switch(
+                      value: isEditable,
+                      onChanged: (value) {
+                        setState(() {
+                          isEditable = value;
+                        });
+                      }
+                    )
+                  ],
+                ),
+
+                Divider(color: ColorScheme.outline),
+
+              //////////
+              /////////////Button GERAR SENHA
             SizedBox(
               width: double.infinity,
               child: FilledButton(onPressed: () {}, child: Text("Gerar Senha")))
@@ -129,4 +208,6 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
       ),
     );
   }
+
+
 }
