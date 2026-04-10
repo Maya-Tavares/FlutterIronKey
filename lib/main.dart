@@ -95,6 +95,8 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       body: SafeArea(child: 
         Column(
@@ -179,7 +181,7 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
 
                 //////////
               /////////////PERMISSAO EDITAR SENHA
-                Divider(color: ColorScheme.outline),
+                Divider(color: colorScheme.outline),
 
                 Row(
                   children: [
@@ -196,7 +198,7 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
                   ],
                 ),
 
-                Divider(color: ColorScheme.outline),
+                Divider(color: colorScheme.outline),
                 SizedBox(height: 20),
 
                 if(isEditable) Text("Estou no modo de edição"),
