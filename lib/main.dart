@@ -197,6 +197,9 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
                 ),
 
                 Divider(color: ColorScheme.outline),
+                SizedBox(height: 20),
+
+                if(isEditable) Text("Estou no modo de edição"),
 
               //////////
               /////////////Button GERAR SENHA
