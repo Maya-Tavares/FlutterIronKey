@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:ironkey/password_generator.dart';
 
 class PinPasswordGenerator implements PasswordGenerator{
+  @override
   String generate(int length){
     const numbers = "1234567890";
     final random = Random();

@@ -23,8 +23,6 @@ static const ColorScheme lightColors = ColorScheme(
     onError: Colors.white,
     surface: backgroundLight,
     onSurface: onSurfaceLight,
-    background: backgroundLight,
-    onBackground: onBackgroundLight,
  );
 
  static const ColorScheme darkColors = ColorScheme(
@@ -37,8 +35,6 @@ static const ColorScheme lightColors = ColorScheme(
  onError: Colors.black,
  surface: backgroundDark,
  onSurface: onSurfaceDark,
- background: backgroundDark,
- onBackground: onBackgroundDark,
  );
 
  static ThemeData lightTheme = ThemeData(
